@@ -1,0 +1,21 @@
+{
+  "name": "heymax",
+  "description": "Official HeyMax plugin for award travel and Max Miles rewards.",
+  "owner": {
+    "name": "HeyMax",
+    "email": "support@heymax.ai"
+  },
+  "plugins": [
+    {
+      "name": "heymax",
+      "version": "2.1.0",
+      "description": "Find award flights, plan how to fund them with airline miles, bank points, and Max Miles, get the most from linked cards, and use HeyMax rewards through the authenticated HeyMax User MCP.",
+      "author": {
+        "name": "HeyMax"
+      },
+      "source": "./",
+      "homepage": "https://heymax.ai",
+      "category": "travel"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+interface:
+  display_name: "Card Maximiser"
+  short_description: "Track card spend, caps, and the best card to use"
+  default_prompt: "Use $card-maximiser to show my card spend and rewards this month, how much bonus cap is left, and which card to use at Din Tai Fung."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "heymax-user"
+      description: "Authenticated HeyMax User MCP"
+      transport: "streamable_http"
+      url: "https://heymax.ai/user-mcp/mcp"

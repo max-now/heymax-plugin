@@ -1,0 +1,112 @@
+{
+  "name": "heymax",
+  "version": "2.1.0",
+  "description": "Find award flights, plan funding with airline miles, bank points, and Max Miles, get the most from linked cards, and use rewards through the authenticated HeyMax User MCP.",
+  "author": {
+    "name": "HeyMax",
+    "email": "support@heymax.ai",
+    "url": "https://heymax.ai"
+  },
+  "homepage": "https://heymax.ai",
+  "repository": "https://github.com/max-now/heymax-plugin",
+  "keywords": [
+    "heymax",
+    "max-miles",
+    "rewards",
+    "award-travel",
+    "flights",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "HeyMax",
+    "shortDescription": "Award flights with your miles",
+    "longDescription": "Find live-refreshed award-flight options, compare cash fares, and plan trips against airline and bank balances, verified transfer routes, Max Miles, and HeyMax First capacity. Funding plans show how much each source can cover; members complete transfers and HeyMax First draws in the HeyMax app. Card Maximiser tracks linked-card spend, rewards earned, and bonus caps, and picks the best card for each merchant, category, or overseas purchase. Supporting rewards tools review activity and merchant offers, or save explicitly confirmed balances. Available to HeyMax members in Singapore and Hong Kong.",
+    "developerName": "HeyMax",
+    "category": "Travel",
+    "capabilities": [
+      "Search award and cash flights",
+      "Plan miles funding",
+      "Maximise linked-card rewards",
+      "Review Max Miles rewards",
+      "Save confirmed loyalty balances"
+    ],
+    "websiteURL": "https://heymax.ai/",
+    "supportURL": "https://help.heymax.ai/en/",
+    "privacyPolicyURL": "https://heymax.ai/company/policy",
+    "termsOfServiceURL": "https://heymax.ai/company/terms",
+    "defaultPrompt": [
+      "Find up to three business-class award flights for my trip.",
+      "How many KrisFlyer miles can I get from my balances and Max Miles?",
+      "Which of my cards should I use at Din Tai Fung, and how much bonus cap is left?"
+    ],
+    "brandColor": "#21005E",
+    "composerIcon": "./assets/heymax-app-icon-512.png",
+    "logo": "./assets/heymax-app-icon-1024.png"
+  },
+  "license": "Apache-2.0",
+  "extensions": {
+    "com.openai": {
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Find and refresh award flights using the member's balances.",
+              "prompt": "Find up to three business-class award flights from SIN to NRT for two adults between September 1 and 5. Prefer nonstop flights and use my saved balances.",
+              "tools_triggered": "get_loyalty_program_accounts, get_heymax_first_status, search_cached_award_flights, start_award_flight_search, get_award_flight_search_results, render_flight_comparison",
+              "expected_behavior": "Returns at most three distinct options, separates cached and fresh observations, assesses funding once across the trip, and does not claim a seat is held or bookable."
+            },
+            {
+              "description": "Plan how many airline miles the member can fund from saved balances.",
+              "prompt": "How many KrisFlyer miles can I get from my saved balances and Max Miles?",
+              "tools_triggered": "get_loyalty_program_accounts, quote_transfers_to_program, list_active_redeem_options",
+              "expected_behavior": "Shows held KrisFlyer miles separately from potential transfer credits by source, applies route minimums, and does not transfer, draw, or save anything."
+            },
+            {
+              "description": "Find earning merchants and return a selected tracked merchant link.",
+              "prompt": "Find fashion merchants where I can earn Max Miles, then give me the HeyMax link for the one I choose.",
+              "tools_triggered": "find_merchants, render_affiliate_offers, get_merchant_tracking_link",
+              "expected_behavior": "Shows matching merchants with their earning rates, waits for the user's selection, and labels the returned merchant URL as a tracked HeyMax link."
+            },
+            {
+              "description": "Save an explicitly confirmed absolute airline-mile balance.",
+              "prompt": "Remember that my KrisFlyer balance is now 82,500 miles.",
+              "tools_triggered": "get_loyalty_program_accounts, update_loyalty_program_points_balance",
+              "expected_behavior": "Updates only the private HeyMax planning balance and confirms the program and amount without exposing account identifiers."
+            },
+            {
+              "description": "Review the member's Max Miles balance and recent rewards activity.",
+              "prompt": "Show my Max Miles balance and my last five transactions.",
+              "tools_triggered": "get_miles_balance, get_recent_transactions",
+              "expected_behavior": "Returns the current balance and five recent transactions without exposing internal user identifiers."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Do not invoke HeyMax for unrelated weather information.",
+              "prompt": "What is the weather in Tokyo tomorrow?"
+            },
+            {
+              "description": "Do not invoke HeyMax for restaurant recommendations.",
+              "prompt": "Recommend a sushi restaurant near Tokyo Station."
+            },
+            {
+              "description": "Do not persist a balance without explicit write intent.",
+              "prompt": "I have 82,500 KrisFlyer miles."
+            }
+          ]
+        },
+        "commerce": false,
+        "commerce_description": "HeyMax does not sell products or take payments in ChatGPT. Tracked merchant links open the merchant's own site, where the member completes any purchase."
+      },
+      "publication": {
+        "countries": [
+          "SG",
+          "HK"
+        ],
+        "release_notes": "Adds transfer-route quotes and miles funding plans, updates card and merchant tool names, and shows ranked flights and merchant offers as interactive cards."
+      }
+    }
+  }
+}

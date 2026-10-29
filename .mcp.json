@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "heymax-user": {
+      "type": "http",
+      "url": "https://heymax.ai/user-mcp/mcp",
+      "extensions": {
+        "com.openai": {
+          "auth": {
+            "type": "oauth",
+            "client": {
+              "mode": "dcr"
+            }
+          }
+        }
+      }
+    }
+  }
+}

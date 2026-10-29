@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "name": "heymax",
+  "displayName": "HeyMax",
+  "version": "2.1.0",
+  "description": "Find award flights, plan how to fund them with airline miles, bank points, and Max Miles, get the most from linked cards, and use HeyMax rewards through the authenticated HeyMax User MCP.",
+  "author": {
+    "name": "HeyMax",
+    "email": "support@heymax.ai"
+  },
+  "compat": {
+    "source": "native",
+    "manifestDir": ".muse-plugin"
+  },
+  "capabilities": {
+    "skills": [
+      {
+        "id": "card-maximiser",
+        "path": "skills/card-maximiser/SKILL.md",
+        "enabledDefault": true
+      },
+      {
+        "id": "plan-miles-funding",
+        "path": "skills/plan-miles-funding/SKILL.md",
+        "enabledDefault": true
+      },
+      {
+        "id": "rewards",
+        "path": "skills/rewards/SKILL.md",
+        "enabledDefault": true
+      },
+      {
+        "id": "search-award-flights",
+        "path": "skills/search-award-flights/SKILL.md",
+        "enabledDefault": true
+      }
+    ],
+    "commands": [],
+    "hooks": [],
+    "mcpServers": [
+      {
+        "id": "heymax-user",
+        "transport": "http",
+        "url": "https://heymax.ai/user-mcp/mcp"
+      }
+    ],
+    "reminders": []
+  }
+}

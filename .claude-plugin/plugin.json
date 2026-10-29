@@ -1,0 +1,24 @@
+{
+  "name": "heymax",
+  "displayName": "HeyMax",
+  "version": "2.1.0",
+  "description": "Find award flights, plan how to fund them with airline miles, bank points, and Max Miles, get the most from linked cards, and use HeyMax rewards through the authenticated HeyMax User MCP.",
+  "author": {
+    "name": "HeyMax",
+    "email": "support@heymax.ai",
+    "url": "https://heymax.ai"
+  },
+  "homepage": "https://heymax.ai",
+  "repository": "https://github.com/max-now/heymax-plugin",
+  "license": "Apache-2.0",
+  "icon": "./assets/heymax-app-icon-1024.png",
+  "privacyPolicyUrl": "https://heymax.ai/company/policy",
+  "keywords": [
+    "heymax",
+    "max-miles",
+    "rewards",
+    "award-travel",
+    "flights",
+    "mcp"
+  ]
+}

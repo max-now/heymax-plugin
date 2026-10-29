@@ -1,0 +1,12 @@
+interface:
+  display_name: "HeyMax Rewards"
+  short_description: "Use rewards data and save confirmed balances"
+  default_prompt: "Use $rewards to review my Max Miles, manage my recorded airline balances when I explicitly ask, and recommend the best next action."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "heymax-user"
+      description: "Authenticated HeyMax User MCP"
+      transport: "streamable_http"
+      url: "https://heymax.ai/user-mcp/mcp"
