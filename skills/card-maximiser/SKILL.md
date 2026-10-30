@@ -21,7 +21,7 @@ Inspect the HeyMax tools exposed in this session and treat their schemas as cano
 - What an MCC means: `get_mcc_info`. A merchant's MCC: `rank_linked_cards_for_merchant`, in its `merchant` result.
 - Card points into a loyalty program: `get_transfer_routes_to_program`.
 
-Spend, reward and cap tools need the card-spending permission. If one returns a permission challenge, ask the user to reconnect HeyMax and approve it. If a tool returns `action_required: "unsupported_region"`, say card analysis covers Singapore members only.
+If a card tool requires authorization, ask the user to reconnect HeyMax. If a tool returns `action_required: "unsupported_region"`, say card analysis covers Singapore members only.
 
 Query all cards unless the user names one, and group results by card. `card_name` accepts a card, alias or bank name; a bank matches all its cards. In searches, pass the card in `card_name`, not inside `query`. Use `category` for spend categories such as dining or fuel.
 

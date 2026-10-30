@@ -17,7 +17,7 @@ Inspect the HeyMax tools exposed in this session and treat their schemas as cano
 - Transfer methods: `get_transfer_routes_to_program`.
 - HeyMax redemption support and terms: `list_active_redeem_options`, then `get_transfer_details` for a native option.
 
-If HeyMax needs authorization or a permission is missing, ask the user to connect or reconnect HeyMax and approve that permission. Never ask for passwords, tokens, one-time codes, or account numbers.
+If HeyMax needs authorization, ask the user to connect or reconnect HeyMax in the browser. Never ask for passwords, tokens, one-time codes, or account numbers.
 
 Resolve the requested program to the canonical code in the discovered schemas. For an award, use the issuing program, which can differ from the operating airline. A mileage target does not need an itinerary; use `search-award-flights` for flight searches.
 

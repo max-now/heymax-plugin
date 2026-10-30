@@ -18,7 +18,7 @@ Treat award travel as scarce-inventory search. Show useful cached observations i
 ## Workflow
 
 1. Inspect the current MCP definitions for the relevant tools and treat their discovered schemas as canonical. Use the cache search, live award start/poll, loyalty-account, HeyMax First, transfer quote and route, active redemption-option, cash-search, and flight-comparison display tools only when available.
-2. If HeyMax needs authorization or a permission is missing, ask the user to connect or reconnect HeyMax and approve that permission in OAuth. Never request passwords, access tokens, one-time codes, or loyalty account numbers.
+2. If HeyMax needs authorization, ask the user to connect or reconnect HeyMax in the browser. Never request passwords, access tokens, one-time codes, or loyalty account numbers.
 3. Extract every usable trip detail from the conversation. Ask one compact grouped question only for missing information that materially changes the search.
 4. Privately load the user's recorded airline balances and Max Miles position. Ask only for important balances that HeyMax cannot retrieve, such as bank or card points. Persist a supplied airline balance only when the user explicitly asks to save it.
 5. Search cached award observations across the approved date window and airports so the user gets useful leads immediately.

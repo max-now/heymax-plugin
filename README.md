@@ -6,7 +6,7 @@ The backend remains the source of truth for OAuth, user isolation, tool schemas,
 
 ## Installation and authentication
 
-Installing the plugin registers the remote MCP server `heymax-user` at `https://heymax.ai/user-mcp/mcp`; users never paste the URL. Authentication is a separate per-user OAuth step, and the HeyMax consent screen lets each user choose which permissions to grant.
+Installing the plugin registers the remote MCP server `heymax-user` at `https://heymax.ai/user-mcp/mcp`; users never paste the URL. Authentication is a separate per-user OAuth step, and the HeyMax consent screen describes the public-tool access the user grants.
 
 | Client | How users install | How users authenticate |
 | --- | --- | --- |
@@ -34,6 +34,8 @@ The balance setter updates only HeyMax's recorded planning balance. It does not 
 ## Support
 
 Get help from the [HeyMax help centre](https://help.heymax.ai/en/) or at support@heymax.ai. The [privacy policy](https://heymax.ai/company/policy) and the [terms of use](https://heymax.ai/company/terms) cover the plugin.
+
+Read the [User MCP guide](docs/mcp.md) for connection steps, access, and what the connector can do.
 
 HeyMax publishes this repository at each release and does not merge pull requests here.
 

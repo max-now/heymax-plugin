@@ -13,7 +13,7 @@ HeyMax helps members earn and manage Max Miles through everyday spending and par
 
 1. Inspect the HeyMax tools exposed by the MCP client for the current session and treat those tool definitions as canonical.
 2. Identify the smallest set of tools that can answer the request. Preserve merchant names, filters, and conditions exactly as the user gave them.
-3. If the HeyMax MCP requires authorization or a permission is missing, ask the user to connect or reconnect HeyMax and approve that permission in the browser OAuth flow. Never ask for passwords, access tokens, one-time codes, or full card numbers in chat.
+3. If the HeyMax MCP requires authorization, ask the user to connect or reconnect HeyMax in the browser. Never ask for passwords, access tokens, one-time codes, or full card numbers in chat.
 4. Call tools only after resolving ambiguity that materially changes the lookup. Avoid broad account queries when a single targeted query is enough. Before a balance write, require an unambiguous program, an absolute current amount, and explicit save/update/remember intent.
 5. Check tool results for `success: false`, `error`, or `action_required`. Explain the required user action instead of guessing or silently substituting data.
 6. Summarize the result in the user's language. Separate data returned by HeyMax from advice or inference, and state when no result was found.
