@@ -1,0 +1,74 @@
+name: Plugin package
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate plugin package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Validate release files
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          def read(path):
+              return json.loads(Path(path).read_text())
+
+          def require(condition, message):
+              if not condition:
+                  raise SystemExit(message)
+
+          marketplace = read(".claude-plugin/marketplace.json")["plugins"][0]
+          claude = read(".claude-plugin/plugin.json")
+          codex = read(".codex-plugin/plugin.json")
+          muse = read(".muse-plugin/plugin.json")
+          for manifest in (marketplace, claude, codex, muse, read("plugin.json")):
+              require(manifest["name"] == "heymax", "Expected the heymax plugin name")
+              require(
+                  bool(manifest["version"]) and manifest["version"] == marketplace["version"],
+                  "Plugin versions must match the marketplace",
+              )
+
+          endpoint = "https://heymax.ai/user-mcp/mcp"
+          for path, transport in ((".mcp.json", "http"), ("mcp.json", "streamable-http")):
+              servers = read(path)["mcpServers"]
+              require(set(servers) == {"heymax-user"}, f"{path}: unexpected MCP servers")
+              server = servers["heymax-user"]
+              require(server["url"] == endpoint, f"{path}: unexpected MCP URL")
+              require(server["type"] == transport, f"{path}: unexpected MCP transport")
+
+          capabilities = muse["capabilities"]
+          require(
+              [(server["id"], server["transport"], server["url"]) for server in capabilities["mcpServers"]]
+              == [("heymax-user", "http", endpoint)],
+              "Muse manifest: unexpected MCP configuration",
+          )
+          require(codex["mcpServers"] == "./.mcp.json", "Codex must use the root MCP config")
+          require(marketplace["source"] == "./", "Marketplace must use the package root")
+
+          skills_dir = Path(codex["skills"])
+          require(skills_dir == Path("skills"), "Codex must use the packaged skills")
+          skills = set(skills_dir.glob("*/SKILL.md"))
+          require(
+              bool(skills) and skills == {Path(skill["path"]) for skill in capabilities["skills"]},
+              "Muse must declare the packaged skills",
+          )
+          for asset in (claude["icon"], codex["interface"]["composerIcon"], codex["interface"]["logo"]):
+              path = Path(asset)
+              require(
+                  path.parts[0] == "assets" and ".." not in path.parts and path.is_file(),
+                  f"Missing or invalid packaged asset: {asset}",
+              )
+
+          print(f"Validated HeyMax {marketplace['version']} package")
+          PY
