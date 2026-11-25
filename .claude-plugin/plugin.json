@@ -1,8 +1,8 @@
 {
   "name": "heymax",
   "displayName": "HeyMax",
-  "version": "2.2.0",
-  "description": "Find award flights, plan how to fund them with airline miles, bank points, and Max Miles, get the most from linked cards, and use HeyMax rewards through the authenticated HeyMax User MCP.",
+  "version": "2.2.1",
+  "description": "Find award flights, plan how to fund them with airline miles, bank points, and Max Miles, get the most from linked cards, and use HeyMax rewards through the authenticated HeyMax User MCP. Merchant recommendations include HeyMax affiliate links. HeyMax earns a commission when a member buys through one, and the member earns Max Miles.",
   "author": {
     "name": "HeyMax",
     "email": "support@heymax.ai",
