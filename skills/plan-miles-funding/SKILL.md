@@ -30,6 +30,11 @@ Access fee in SGD = draw miles × `membership.tier_policy.access_fee_cents_per_m
 
 ## Answer
 
-Give the held balance, transfer credits by source, any remaining gap, and the draw or the limit that blocks it. Transfers are often irreversible, so tell the user to confirm the award with the airline first.
+Answer in text, as numbered steps in the order the member takes them:
+1. Use the airline miles already held.
+2. Transfer from each source.
+3. Draw from HeyMax First, with its access fee.
+
+Then give two amounts: what they pay now, which is transfer fees plus any HeyMax First fee, and what they pay when booking, which is the award taxes. Name any remaining gap, or the limit that blocks it. Transfers are often irreversible, so tell the user to confirm the seats with the airline first.
 
 Members complete Max Miles transfers and HeyMax First draws in the HeyMax app, and bank or yuu legs in that program, using a returned `transfer_link` when present.

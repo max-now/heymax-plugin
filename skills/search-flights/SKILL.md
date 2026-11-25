@@ -1,48 +1,51 @@
 ---
 name: search-flights
-description: Use the authenticated HeyMax User MCP to search cash fares and award flights, compare them, and check what the member can fund from airline miles, Max Miles and HeyMax First. Use when a user asks what a flight costs in cash or miles, wants to redeem points for a trip, compares paying cash with using miles, explores flexible dates or airports, or looks for premium-cabin seats.
+description: Use the authenticated HeyMax User MCP to search cash fares and award flights, compare them, and recommend one. Use when a user asks what a flight costs in cash or miles, wants to redeem points for a trip, compares paying cash with using miles, explores flexible dates or airports, or looks for premium-cabin seats.
 ---
 
 # Search Flights
 
 ## Get the trip
 
-Use every detail already in the conversation. Ask once, in one message, only for what changes the search: route, dates or flexibility, number of travellers, and cabin.
+Use every detail already in the conversation. If something that changes the search is missing, ask once, in one message: route or airports, dates or flexibility, travellers, cabin, and stops. Don't ask again. Search with defaults for anything unanswered (economy, any stops, the whole date window) and state them in the answer.
 
-Search what the user asked for: cash, miles, or both. When they ask what a flight costs without saying how they pay, search both.
+When the user doesn't say how they pay, search cash and miles.
 
 ## Cash fares
 
-Call `search_cash_flights` with uppercase IATA codes, the full party and the cabin. It defaults to business class and USD, so pass `cabin_class` and the member's `currency`, such as `SGD`, explicitly. It searches a return trip in one call when you pass `return_date`. Its `num_stops` is a filter code: 0 any, 1 nonstop, 2 at most one stop.
+Call `search_cash_flights` with uppercase IATA codes, the full party, `cabin_class`, and the member's `currency`, such as `SGD`. Pass `return_date` for a return trip.
 
 ## Award flights
 
-1. Call `search_cached_award_flights` for the date window, with the full party and the cabin. Omit `programs` unless the user names one. Its `num_stops` is a maximum, so 0 means nonstop.
-2. Pick up to three promising one-way route/date/cabin options, or the exact requested date if the cache is empty. Call `start_award_flight_search` for each. Search each direction of a return trip separately.
-3. Show the cached prices while the live searches run. Poll `get_award_flight_search_results` with the returned `retry_after_seconds` until each task ends.
-4. Live search does not cover KrisFlyer (SQ) or EVA Air (BR). For those, use cached results only.
+1. Call `search_cached_award_flights` for the date window with the full party and cabin.
+2. Refresh with `start_award_flight_search`, one direction per task:
+   - If the cache has matches, refresh the best three dates.
+   - If not, search up to 11 dates per direction: the user's dates, or for a longer window the 11 best, such as the cheapest cash dates.
+   - Skip live search for dates beyond the airlines' booking window, about 355 days ahead.
+3. Show cached prices while live searches run. Poll `get_award_flight_search_results` with `retry_after_seconds` until each task ends.
+4. Live search doesn't cover KrisFlyer (SQ). Say when its prices come only from the cache.
+
+Award search covers Max Miles partners only: Cathay Pacific, Flying Blue, KrisFlyer, Qatar Airways, SAS and Turkish Airlines. Leave `programs` empty unless the user names one of them. If they name another program, say HeyMax can't search it.
+
+Pass `num_stops` only when the user limits stops. On every flight tool it is the maximum number of stops, and 0 means nonstop.
+
+Say "no award seats" only after live search found none. Name the dates you checked and suggest one change.
 
 ## Compare
 
-- When available, call `lookup_award_chart` for the route and cabin. Use `benchmark_miles` only as an internal anchor: at or below it is a good price; above it needs a stronger reason. Do not quote the benchmark.
-- Prices marked `price_basis: "per_passenger"` are per person. Multiply by the passengers for the party total.
-- The operating airline can differ from the program that issues the award. Funding depends on the issuing program; follow `plan-miles-funding` for each award you recommend. Do not spend the same balance on both directions.
-- Flag mixed cabins, unknown taxes and the observation time in `last_seen`.
-
-### Put cash and miles on one scale
-
-Compare every option by its cash-equivalent cost per person:
-
-- **Cash fare:** the fare.
-- **Award:** Max Miles needed × the member's HeyMax First `access_fee_cents_per_mile` ÷ 100, plus taxes. Take the Max Miles needed from the funding plan's transfer rate. Use this rate even for miles the member already holds, so options compare fairly however they are funded.
-
-Use the value the user gives per mile instead, when they give one. Without a HeyMax First rate, compare by value per mile: (cash fare − award taxes) ÷ miles. Put amounts in one currency. When the currencies differ, convert at an approximate rate and state it.
-
-Rank by this cost, then state the member's actual out-of-pocket under the funding plan: taxes, plus any draw access fee, which is refunded when they reclaim it with eligible earned miles. Example: "Award ≈ S$2,950 equivalent (85,000 Max Miles at 3¢ + S$400 taxes) vs S$6,794 cash; with your current miles you pay only the S$400 taxes."
-- For a cash fare the member may book, use `card-maximiser` for the best card and `rewards` to check whether the airline or a travel site earns Max Miles.
+- Put every option on one scale. A cash fare costs the fare. An award costs Max Miles needed × the HeyMax First `access_fee_cents_per_mile` from `get_heymax_first_status` ÷ 100, plus taxes. Without that rate, use (cash fare − award taxes) ÷ miles. Convert to one currency.
+- Show party totals, and say whether each price covers the return or one way only.
+- Show business with miles only when it costs at most 1.5× the cheapest economy option, unless the user asked for business.
+- Call `lookup_award_chart` when available. Treat `benchmark_miles` as an internal anchor and don't quote it.
+- Prices marked `price_basis: "per_passenger"` are per person.
 
 ## Answer
 
-Recommend up to three distinct options, best first, mixing cash and award when both were searched. For each, give the date, flights, stops, cabin, and the price per person: cash with currency, or miles plus taxes with the issuing program, plus the cash-equivalent cost when cash and award are both shown. For an award, say whether the member can fund it now, with a HeyMax First draw, or not. Then call `render_flight_comparison` once with the ranked results and keep the written answer complete.
+1. Give a verdict: the option to book and why, and one fallback.
+2. Call `render_flight_comparison` once with up to three options, best first:
+   - Set `title`, `passengers`, a `label` on the best option, and `trip_coverage` on each option.
+   - Add `cash_equivalent` on awards.
+   - Put the price to show first in `pricing_options`.
+3. Write the full answer as text too.
 
-Say "no matching result for these parameters", not "no seats exist", and suggest one change, such as nearby dates. Prices are observations, not holds. Tell the user to confirm an award seat with the airline before transferring points. The member books on the airline or travel site.
+Don't plan funding here. When the member picks an award, follow `plan-miles-funding`. For a cash fare, the member books on the airline or travel site; `card-maximiser` finds the best card. Prices are observations, not holds.

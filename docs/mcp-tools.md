@@ -1,10 +1,10 @@
 # HeyMax MCP tool reference
 
-This reference describes the 28 tools exposed to connected members on 29 October 2026. The MCP server's live `tools/list` response defines the current input schemas, output schemas, annotations, and availability. Clients should use that response when making calls. The descriptions here help members and connector reviewers understand what each tool reads or changes.
+This reference describes the 29 public tools that connected members can use. The MCP server's live `tools/list` response defines the current input schemas, output schemas, annotations, and availability. Clients should use that response when making calls. The descriptions here help members and connector reviewers understand what each tool reads or changes.
 
 Connect to `https://heymax.ai/user-mcp/mcp` with per-member OAuth as described in the [connection guide](mcp.md). Connecting authorizes the public tools listed here for the signed-in member.
 
-All calls use the signed-in member's HeyMax account. "Private" means the result can contain the member's account data, spending, identity status, or trip search. Do not publish or log those results. A "read" call does not change the member's saved account data, though a flight search may query an external provider. The two "write" calls are described separately below.
+"Private" means the result can include the member's account data, spending, identity status or trip searches. A "Read" call does not change the member's saved data, though flight searches query outside providers.
 
 ## Rewards and loyalty accounts
 
@@ -42,9 +42,10 @@ These tools read HeyMax's card catalogue and the member's linked-card data. They
 | --- | --- | --- | --- | --- |
 | `find_merchants` | Optional `merchant_name`, `categories`, `limit` | Matching HeyMax merchants, earning rates, available earning paths, and each merchant's tracked link. | Read | Yes |
 | `get_upcoming_deals` | Optional `limit` | Upcoming dated HeyMax deals in the member's market. | Read | Yes |
+| `get_product_tracking_link` | Required `product_url`: a Shopee, Lazada or Taobao product page | The member's tracked HeyMax link for that product, the product name and its Max Miles earn rate, or a message to use the HeyMax app when no link can be made. | Write | Yes |
 | `render_affiliate_offers` | Required `offers`; optional `selected_rate_names_by_merchant` | An offer-card display built from offers already returned in the conversation. | Read | Yes |
 
-These tools do not open a merchant site or make a purchase. A tracking link can credit HeyMax or the member for a qualifying purchase. Identify it as a tracked link when presenting it. The member chooses whether to open it.
+These tools do not open a merchant site or make a purchase. `get_product_tracking_link` creates a short link for the member through the marketplace's affiliate service. A tracking link can credit HeyMax or the member for a qualifying purchase. Identify it as a tracked link when presenting it. The member chooses whether to open it.
 
 ## Flights and transfer planning
 
@@ -52,14 +53,17 @@ Flight prices and availability are observations, not reservations. A live search
 
 | Tool | Input | Result | Access | Private |
 | --- | --- | --- | --- | --- |
+| `lookup_award_chart` | Required `origin`, `destination`, `cabin_class` | A reference mileage price for one passenger, one way, without taxes. `benchmark_miles` is null when no reference exists. It does not confirm that a seat is available. | Read | No |
 | `search_cached_award_flights` | Required `origin`, `destination`, `start_date`, `end_date`; optional `num_adults`, `num_children`, `num_infants`, `cabin_class`, `num_stops`, `programs` | Recently observed award itineraries and prices, with observation time and source where available. | Read | Yes |
 | `search_cash_flights` | Required `origin`, `destination`, `departure_date`; optional `return_date`, `num_adults`, `num_children`, `num_infants`, `cabin_class`, `num_stops`, `currency` | Current cash fare observations in the shared flight result format. It queries external providers. | Read | Yes |
 | `start_award_flight_search` | Required `origin`, `destination`, `departure_date`; optional `return_date`, `num_adults`, `num_children`, `num_infants`, `cabin_class`, `num_stops`, `programs` | Private search `task_id` and initial `status`. It starts an external award search. | Write | Yes |
 | `get_award_flight_search_results` | Required `task_id` | Current task status and award results when the search completes. | Read | Yes |
-| `render_flight_comparison` | Required `flight_data`; optional `transfer_options_by_program` | A comparison display built from already returned itineraries. | Read | Yes |
+| `render_flight_comparison` | Required `flight_data` (one to three itineraries, best first, each with optional `trip_coverage`, plus `cash_equivalent` on awards); optional `title`, `passengers` (per-passenger award prices then show as party totals) | A comparison display built from already returned itineraries. | Read | Yes |
 | `get_transfer_routes_to_program` | Required `target_program` | Transfer routes into that program with rates, fees, and timing. | Read | No |
 | `quote_transfers_to_program` | Required `target_program`; optional hypothetical `balances` | Transfer quotes using saved balances and Max Miles, or supplied hypothetical balances. Supplied balances are not saved. | Read | Yes |
 | `get_transfer_details` | Required `partner_name` | Partner requirements, rate, limits, processing time, and saved membership details when available. | Read | Yes |
+
+On every flight search tool, `num_stops` is the maximum number of stops: 0 means nonstop, and omitting it allows any. Award searches cover the Max Miles airline partners only: Flying Blue (KL), Cathay Pacific (CX), Qatar Airways (QR), SAS (SK), KrisFlyer (SQ) and Turkish Airlines (TK). Omitting `programs` searches all six.
 
 `start_award_flight_search` creates a private task and queries outside data sources. Poll `get_award_flight_search_results` with its `task_id` until the task completes or fails. A static award-chart price or an older cached observation does not prove a seat is bookable. Transfer routes and quotes are plans only; members complete transfers in the HeyMax app.
 
