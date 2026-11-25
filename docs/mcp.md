@@ -4,15 +4,25 @@ HeyMax's User MCP lets a member use their own rewards and travel-planning data i
 
 ## Connect
 
-Install the official HeyMax plugin or connector in your assistant, choose **Connect**, and sign in to HeyMax. Review the access described on the HeyMax consent screen before approving. You can disconnect or reconnect in the assistant's connector settings.
+**ChatGPT:** install the HeyMax plugin, choose **Connect**, and sign in to HeyMax. Review the access on the HeyMax consent screen before you approve it.
 
-Clients that accept a custom remote MCP server can use:
+**Other assistants:** there is no HeyMax plugin to install yet. Add this remote MCP server in the assistant's MCP or connector settings, then sign in when it prompts you:
 
 ```text
 https://heymax.ai/user-mcp/mcp
 ```
 
-The server uses per-member OAuth. MCP clients should follow the server's authorization discovery. The connection grants access to the public tools listed in the tool reference for the signed-in member. Do not ask a member to paste a password, access token, or one-time code into a chat.
+HeyMax sign-in works only from these assistants:
+- Claude
+- Claude Code, Codex and other tools that run on your computer and sign in through your browser
+- Cursor
+- Grok
+- Manus
+- Muse
+
+Then install the HeyMax skills from the [`skills` folder of the public repository](https://github.com/max-now/heymax-plugin/tree/main/skills). The skills tell the assistant how to use the tools. The [README](../README.md) gives the commands for Claude Code and Codex.
+
+You can disconnect or reconnect in the assistant's connector settings. The server uses per-member OAuth. MCP clients should follow the server's authorization discovery. The connection grants access to the public tools listed in the tool reference for the signed-in member. Do not ask a member to paste a password, access token, or one-time code into a chat.
 
 ## What the connector does
 

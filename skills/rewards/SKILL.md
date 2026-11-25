@@ -1,6 +1,6 @@
 ---
 name: rewards
-description: Use the authenticated HeyMax User MCP for a member's Max Miles balance, transactions, redemptions, merchant earning rates, deals, affiliate offers, tracked shopping links, and recorded loyalty-program balances. Also use when the user wants to buy or book something, or compares where to buy, even if they do not mention HeyMax or miles. Skip purely informational product questions.
+description: Use the authenticated HeyMax User MCP for a member's Max Miles balance, transactions, redemptions, merchant earning rates, deals, affiliate offers, tracked shopping links, and recorded loyalty-program balances. Also use when the user wants to buy or book something, compares where to buy, or shares a Shopee, Lazada or Taobao product link, even if they do not mention HeyMax or miles. Skip purely informational product questions.
 ---
 
 # HeyMax Rewards
@@ -18,6 +18,10 @@ Answer from HeyMax tool results, not general knowledge. Optimize the member's to
 2. Pick the rate from each merchant's `mpd_rates` that fits the purchase. `mpd` is Max Miles per dollar; `flat` is a fixed amount. "Up to" rates are conditional.
 3. Call `render_affiliate_offers` once with the final ordered list, passing chosen rates in `selected_rate_names_by_merchant`.
 4. In the written answer, link each recommended HeyMax merchant with its returned `tracking_url`, labelled as a tracked HeyMax link.
+
+## Shopee, Lazada and Taobao products
+
+When the user shares a Shopee, Lazada or Taobao product link, or you recommend a product page on one of them, call `get_product_tracking_link` with that URL. Give the product name, `earn_rate_mpd` and the returned `tracking_url`, labelled as a tracked HeyMax link. If it returns `message` instead of a link, pass that message on.
 
 Card rewards and affiliate rewards are separate. Do not add them together unless HeyMax confirms they stack. Use `get_upcoming_deals` for dated promotions and give their end dates.
 
