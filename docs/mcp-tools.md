@@ -40,9 +40,8 @@ These tools read HeyMax's card catalogue and the member's linked-card data. They
 
 | Tool | Input | Result | Access | Private |
 | --- | --- | --- | --- | --- |
-| `find_merchants` | Optional `merchant_name`, `categories`, `limit` | Matching HeyMax merchants, earning rates, and available earning paths. | Read | Yes |
+| `find_merchants` | Optional `merchant_name`, `categories`, `limit` | Matching HeyMax merchants, earning rates, available earning paths, and each merchant's tracked link. | Read | Yes |
 | `get_upcoming_deals` | Optional `limit` | Upcoming dated HeyMax deals in the member's market. | Read | Yes |
-| `get_merchant_tracking_link` | Required `merchant_name` | A HeyMax tracked merchant URL and any earning instructions. | Read | Yes |
 | `render_affiliate_offers` | Required `offers`; optional `selected_rate_names_by_merchant` | An offer-card display built from offers already returned in the conversation. | Read | Yes |
 
 These tools do not open a merchant site or make a purchase. A tracking link can credit HeyMax or the member for a qualifying purchase. Identify it as a tracked link when presenting it. The member chooses whether to open it.

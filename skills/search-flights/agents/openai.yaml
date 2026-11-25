@@ -1,0 +1,12 @@
+interface:
+  display_name: "Search Flights"
+  short_description: "Compare cash fares and award flights you can fund"
+  default_prompt: "Use $search-flights to compare cash fares and award flights for my trip and show what I can fund with my airline miles, Max Miles, and HeyMax First."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "heymax-user"
+      description: "Authenticated HeyMax User MCP"
+      transport: "streamable_http"
+      url: "https://heymax.ai/user-mcp/mcp"

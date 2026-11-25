@@ -1,6 +1,6 @@
 {
   "name": "heymax",
-  "version": "2.1.2",
+  "version": "2.2.0",
   "description": "Find award flights, plan funding with airline miles, bank points, and Max Miles, get the most from linked cards, and use rewards through the authenticated HeyMax User MCP.",
   "author": {
     "name": "HeyMax",
@@ -66,7 +66,7 @@
             {
               "description": "Find earning merchants and return a selected tracked merchant link.",
               "prompt": "Find fashion merchants where I can earn Max Miles, then give me the HeyMax link for the one I choose.",
-              "tools_triggered": "find_merchants, render_affiliate_offers, get_merchant_tracking_link",
+              "tools_triggered": "find_merchants, render_affiliate_offers",
               "expected_behavior": "Shows matching merchants with their earning rates, waits for the user's selection, and labels the returned merchant URL as a tracked HeyMax link."
             },
             {
